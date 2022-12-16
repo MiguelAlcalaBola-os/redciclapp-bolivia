@@ -1,4 +1,5 @@
 // import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import '../model/recicladora_model.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +21,7 @@ class CRUDServices {
 
   Future<bool> guardarData(Object data, String table) async {
     try {
-      await FirebaseDatabase.instance.ref().child(table).push().set(data);
+      await FirebaseDatabase.instance.ref('$table').push().set(data);
       return true;
     } catch (e) {
       print(e);

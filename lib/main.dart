@@ -1,3 +1,10 @@
+
+
+import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import './screens/home.dart';
+import './screens/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:material_kit_flutter/dashboard/form_pdf.dart';
 import 'package:material_kit_flutter/dashboard/pdfs_admin.dart';
@@ -30,25 +37,30 @@ import 'package:material_kit_flutter/screens/update_date.dart';
 import 'package:material_kit_flutter/screens/videos.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-
-void main() async {
+Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    name: 'Redcicla',
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  runApp(MaterialKitPROFlutter());
+  await Firebase.initializeApp();
+  runApp(MyApp());
 }
+final navigatorKey = GlobalKey<NavigatorState>();
 
-class MaterialKitPROFlutter extends StatelessWidget {
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: "Redcicla",
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(primarySwatch: Colors.grey),
-        initialRoute: "/login",
-        routes: <String, WidgetBuilder>{
+      navigatorKey: navigatorKey,
+      debugShowCheckedModeBanner: false,
+      title: "RedCiclapp",
+      home: mainpage(),
+    );
+  }
+}
+
+class mainpage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+  return MaterialApp(
+      routes: <String, WidgetBuilder>{
           "/onboarding": (BuildContext context) => new Onboarding(),
           "/pro": (BuildContext context) => new Pro(),
           "/home": (BuildContext context) => new Home(),
@@ -78,6 +90,27 @@ class MaterialKitPROFlutter extends StatelessWidget {
           "/formpdf": (BuildContext context) => new FormPDFs(),
           "/videoadmin": (BuildContext context) => new VideosAdmin(),
           "/useradmin": (BuildContext context) => new Users()
-        });
+        },
+   // ScaffoldMessengerState: snackbar.messengerKey,
+          home: StreamBuilder<User>(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          if(snapshot.connectionState==ConnectionState.waiting){
+           print(snapshot);
+            return Center(child:CircularProgressIndicator());
+          }
+          
+          else if(snapshot.hasError){
+            return Center(child: Text("algo salio mal"));
+          }
+          else if(snapshot.hasData) {
+            return Home();
+          
+          } else {
+            return LoginScreen();
+          }
+        },
+      ));
   }
+
 }

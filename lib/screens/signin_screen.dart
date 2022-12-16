@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:material_kit_flutter/dashboard/getstarted.dart';
 import 'package:material_kit_flutter/screens/home.dart';
 //import 'package:material_kit_flutter/screens/home_screen.dart';
 import 'package:material_kit_flutter/screens/reset_password.dart';
@@ -57,13 +58,19 @@ class _SignInScreenState extends State<SignInScreen> {
                       .signInWithEmailAndPassword(
                           email: _emailTextController.text,
                           password: _passwordTextController.text)
+                         
                       .then((value) {
+
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => Home()));
-                  }).onError((error, stackTrace) {
+                        }
+                  
+                  ).onError((error, stackTrace) {
                     print("Error ${error.toString()}");
                   });
-                }),
+
+                }
+                ),
                 firebaseUIButton(context, "Iniciar Sesión con Google",
                     () async {
                   User user =
@@ -74,6 +81,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 }),
                 firebaseUIButton(context, "Iniciar Sesión con Facebook", () {
                   FirebaseAuth.instance
+                
                       .signInWithEmailAndPassword(
                           email: _emailTextController.text,
                           password: _passwordTextController.text)
@@ -83,7 +91,8 @@ class _SignInScreenState extends State<SignInScreen> {
                   }).onError((error, stackTrace) {
                     print("Error ${error.toString()}");
                   });
-                }),
+                }),  
+              
                 signUpOption()
               ],
             ),
@@ -133,4 +142,7 @@ class _SignInScreenState extends State<SignInScreen> {
       ),
     );
   }
+ 
 }
+
+

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:material_kit_flutter/constants/Theme.dart';
 import 'package:material_kit_flutter/screens/login_page.dart';
 import 'package:material_kit_flutter/services/crud_services.dart';
-
+import "../main.dart";
 import '../services/acopiadora_services.dart';
 
 class RegisterAcopiadora extends StatefulWidget {
@@ -14,6 +14,7 @@ class RegisterAcopiadora extends StatefulWidget {
 }
 
 class _RegisterAcopiadoraState extends State<RegisterAcopiadora> {
+  
   final TextEditingController _nombreCompletoController =
       TextEditingController();
   final TextEditingController _numeroCelularController =
@@ -360,7 +361,7 @@ class _RegisterAcopiadoraState extends State<RegisterAcopiadora> {
                 'direccion': _direccionController.text,
                 'detalles': _detallesController.text,
                 'correo': _em
-              }, 'acopiadores');
+              },"acopiadores/${_uidUser.hashCode}");
               if (resp) {
                 Navigator.pushReplacementNamed(context, '/options');
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -379,6 +380,23 @@ class _RegisterAcopiadoraState extends State<RegisterAcopiadora> {
     );
   }
 
+  StreamBuilder<User> _uidUser(BuildContext context) {
+    return StreamBuilder(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (BuildContext context, snapshot) {
+
+          if (snapshot.hasData) {
+           
+            var name = snapshot.data.uid;
+             print(name);
+            return Text(name, style: TextStyle(
+              color: Colors.white
+            ),);
+          } else {
+            return Text('sin nomvew');
+          }
+        });
+  }
   String _validatorNombreCompleto(String value) {
     if (!_minLength(value)) {
       return 'Por favor llene este campo';
