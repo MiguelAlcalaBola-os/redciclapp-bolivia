@@ -72,7 +72,8 @@ class _RegisterRecicladoraState extends State<RegisterRecicladora> {
           builder: (BuildContext context, snapshot) {
             if (snapshot.hasData) {
               var email = snapshot.data.email;
-              return formularioRecicladora(email);
+              var usuarioUid = snapshot.data.uid;
+              return formularioRecicladora(email, usuarioUid);
             } else {
               return LoginScreen();
             }
@@ -80,7 +81,7 @@ class _RegisterRecicladoraState extends State<RegisterRecicladora> {
         ));
   }
 
-  Widget formularioRecicladora(String email) {
+  Widget formularioRecicladora(String email, String usuarioUid) {
     return SingleChildScrollView(
       child: Container(
         padding: EdgeInsets.all(20.0),
@@ -125,7 +126,7 @@ class _RegisterRecicladoraState extends State<RegisterRecicladora> {
               SizedBox(
                 height: 25.0,
               ),
-              _registerButton(email),
+              _registerButton(email, usuarioUid),
               SizedBox(
                 height: 10.0,
               ),
@@ -373,7 +374,7 @@ class _RegisterRecicladoraState extends State<RegisterRecicladora> {
         validator: ((value) => _validatorNombreCompleto(value)));
   }
 
-  Widget _registerButton(String email) {
+  Widget _registerButton(String email, String usuarioUid) {
     var _em = email;
     return Center(
       child: ElevatedButton(
@@ -397,8 +398,10 @@ class _RegisterRecicladoraState extends State<RegisterRecicladora> {
                 'ruta': _callesRecorreController.text,
                 'dias': _queDiasRecorreController.text,
                 'correo': _em,
-                'detalles': _detallesController.text
-              }, 'recicladoras');
+                'detalles': _detallesController.text,
+                'rol': 'recicladoras',
+                'uidUser': usuarioUid
+              }, "recicladoras/$usuarioUid");
 
               if (resp) {
                 Navigator.pushReplacementNamed(context, '/options');

@@ -14,7 +14,6 @@ class RegisterAcopiadora extends StatefulWidget {
 }
 
 class _RegisterAcopiadoraState extends State<RegisterAcopiadora> {
-  
   final TextEditingController _nombreCompletoController =
       TextEditingController();
   final TextEditingController _numeroCelularController =
@@ -61,7 +60,8 @@ class _RegisterAcopiadoraState extends State<RegisterAcopiadora> {
           builder: (BuildContext context, snapshot) {
             if (snapshot.hasData) {
               var email = snapshot.data.email;
-              return formularioAcopiadora(email);
+              var usuarioUid = snapshot.data.uid;
+              return formularioAcopiadora(email, usuarioUid);
             } else {
               return LoginScreen();
             }
@@ -69,7 +69,7 @@ class _RegisterAcopiadoraState extends State<RegisterAcopiadora> {
         ));
   }
 
-  Widget formularioAcopiadora(String email) {
+  Widget formularioAcopiadora(String email, String usuarioUid) {
     return SingleChildScrollView(
       child: Container(
         padding: EdgeInsets.all(20.0),
@@ -110,7 +110,7 @@ class _RegisterAcopiadoraState extends State<RegisterAcopiadora> {
               SizedBox(
                 height: 25.0,
               ),
-              _registerButton(email),
+              _registerButton(email, usuarioUid),
               SizedBox(
                 height: 10.0,
               ),
@@ -336,7 +336,7 @@ class _RegisterAcopiadoraState extends State<RegisterAcopiadora> {
         validator: ((value) => _validatorNombreCompleto(value)));
   }
 
-  Widget _registerButton(String email) {
+  Widget _registerButton(String email, String usuarioUid) {
     var _em = email;
     return Center(
       child: ElevatedButton(
@@ -351,6 +351,9 @@ class _RegisterAcopiadoraState extends State<RegisterAcopiadora> {
             if (_formAcopiadora.currentState.validate()) {
               bool resp = await CRUDServices().guardarData({
                 //AcopiadoraServices().guardarAcopiadora(
+                //   'uidUser': 'ta6Jc7NOagbAlXmKtrYO1YH0kre2',
+                //   'rol': 'Admin',
+                // }, 'Usuarios');
                 'nombre': _nombreCompletoController.text,
                 'ciudad': comboCiudad,
                 'zona': _comboZona,
@@ -360,8 +363,10 @@ class _RegisterAcopiadoraState extends State<RegisterAcopiadora> {
                 'querecibe': _queResiduosController.text,
                 'direccion': _direccionController.text,
                 'detalles': _detallesController.text,
-                'correo': _em
-              },"acopiadores/${_uidUser.hashCode}");
+                'correo': _em,
+                'rol': 'acopiadores',
+                'uidUser': usuarioUid
+              }, "acopiadores/$usuarioUid"); //${_uidUser}
               if (resp) {
                 Navigator.pushReplacementNamed(context, '/options');
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -380,23 +385,32 @@ class _RegisterAcopiadoraState extends State<RegisterAcopiadora> {
     );
   }
 
+  // String uidUser() {
+  //   FirebaseAuth.instance.authStateChanges().listen((User usuario) {
+  //     //print(user.uid);
+  //     // const userUid = usuario.uid;
+  //     return (usuario.uid);
+  //   });
+  // }
+
   StreamBuilder<User> _uidUser(BuildContext context) {
     return StreamBuilder(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (BuildContext context, snapshot) {
-
           if (snapshot.hasData) {
-           
             var name = snapshot.data.uid;
-             print(name);
-            return Text(name, style: TextStyle(
-              color: Colors.white
-            ),);
+            print('nombre');
+            print(name);
+            return Text(
+              name,
+              style: TextStyle(color: Colors.white),
+            );
           } else {
             return Text('sin nomvew');
           }
         });
   }
+
   String _validatorNombreCompleto(String value) {
     if (!_minLength(value)) {
       return 'Por favor llene este campo';

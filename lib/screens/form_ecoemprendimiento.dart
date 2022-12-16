@@ -74,7 +74,8 @@ class _RegisterEcoemprendimientoState extends State<RegisterEcoemprendimiento> {
           builder: (BuildContext context, snapshot) {
             if (snapshot.hasData) {
               var email = snapshot.data.email;
-              return formularioEcoemprendimiento(email);
+              var usuarioUid = snapshot.data.uid;
+              return formularioEcoemprendimiento(email, usuarioUid);
             } else {
               return LoginScreen();
             }
@@ -82,7 +83,7 @@ class _RegisterEcoemprendimientoState extends State<RegisterEcoemprendimiento> {
         ));
   }
 
-  Widget formularioEcoemprendimiento(String email) {
+  Widget formularioEcoemprendimiento(String email, String usuarioUid) {
     return SingleChildScrollView(
       child: Container(
         padding: EdgeInsets.all(20.0),
@@ -131,7 +132,7 @@ class _RegisterEcoemprendimientoState extends State<RegisterEcoemprendimiento> {
               SizedBox(
                 height: 25.0,
               ),
-              _registerButton(email),
+              _registerButton(email, usuarioUid),
               SizedBox(
                 height: 10.0,
               ),
@@ -424,7 +425,7 @@ class _RegisterEcoemprendimientoState extends State<RegisterEcoemprendimiento> {
         validator: ((value) => _validatorNombreCompleto(value)));
   }
 
-  Widget _registerButton(String email) {
+  Widget _registerButton(String email, String usuarioUid) {
     var _em = email;
     return Center(
       child: ElevatedButton(
@@ -450,8 +451,10 @@ class _RegisterEcoemprendimientoState extends State<RegisterEcoemprendimiento> {
                 'horarios': _horariosRecolectaController.text,
                 'capacidad': _comboNivel,
                 'detalles': _detallesController.text,
-                'correo': _em
-              }, 'ecoemprendimientos');
+                'correo': _em,
+                'rol': 'ecoemprendimientos',
+                'uidUser': usuarioUid
+              }, "ecoemprendimientos/$usuarioUid");
               if (resp) {
                 Navigator.pushReplacementNamed(context, '/options');
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(

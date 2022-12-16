@@ -7,6 +7,7 @@ import 'package:material_kit_flutter/screens/home.dart';
 //import 'package:material_kit_flutter/screens/options.dart';
 import 'package:material_kit_flutter/screens/registration_screen.dart';
 import 'package:material_kit_flutter/screens/reset_password.dart';
+import 'package:material_kit_flutter/services/crud_services.dart';
 import 'package:material_kit_flutter/widgets/drawer.dart';
 import 'package:firebase_core/firebase_core.dart';
 //import "../dashboard/getstarted.dart";
@@ -424,7 +425,6 @@ class _LoginScreenState extends State<LoginScreen> {
                             )
                             // ],
                           ])
-                          
                     ],
                   ),
                 ),

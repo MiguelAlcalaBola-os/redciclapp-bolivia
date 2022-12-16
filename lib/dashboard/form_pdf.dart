@@ -15,11 +15,9 @@ class FormPDFs extends StatefulWidget {
 }
 
 class _FormPDFsState extends State<FormPDFs> {
-  final TextEditingController _NombrePDFController =
-      TextEditingController();
-  final TextEditingController _EnlacePDFController =
-      TextEditingController();
-  
+  final TextEditingController _NombrePDFController = TextEditingController();
+  final TextEditingController _EnlacePDFController = TextEditingController();
+
   final GlobalKey<FormState> _formPdf = GlobalKey<FormState>();
 
   @override
@@ -40,23 +38,20 @@ class _FormPDFsState extends State<FormPDFs> {
             },
           ),
         ),
-
-
-      backgroundColor: Color.fromARGB(255, 255, 255, 255),
+        backgroundColor: Color.fromARGB(255, 255, 255, 255),
         // key: _scaffoldKey,
         body: StreamBuilder<User>(
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (BuildContext context, snapshot) {
             if (snapshot.hasData) {
+              print(snapshot.hasData);
               var email = snapshot.data.email;
               return formularioPdf(email);
             } else {
               return LoginScreen();
             }
           },
-          
-        )
-        );
+        ));
   }
 
   Widget formularioPdf(String email) {
@@ -142,10 +137,10 @@ class _FormPDFsState extends State<FormPDFs> {
           ),
           onPressed: () async {
             if (_formPdf.currentState.validate()) {
-              bool resp = await CRUDServices().guardarData(
-                  {'nombre':_NombrePDFController.text,
-                  'enlace': _EnlacePDFController.text,},'Pdf'
-              );
+              bool resp = await CRUDServices().guardarData({
+                'nombre': _NombrePDFController.text,
+                'enlace': _EnlacePDFController.text,
+              }, 'Pdf');
               if (resp) {
                 Navigator.pushReplacementNamed(context, '/pdfadmin');
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -158,7 +153,6 @@ class _FormPDFsState extends State<FormPDFs> {
                   backgroundColor: Colors.red,
                 ));
               }
-              
             }
           },
           child: Text('Guardar', style: TextStyle(color: Colors.white))),
@@ -171,11 +165,9 @@ class _FormPDFsState extends State<FormPDFs> {
     }
   }
 
-
   bool _minLength(String value) {
     return value.isNotEmpty && value.length >= 4;
   }
-
 }
 
 
