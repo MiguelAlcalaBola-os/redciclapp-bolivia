@@ -399,8 +399,7 @@ class _RegisterAcopiadoraState extends State<RegisterAcopiadora> {
         builder: (BuildContext context, snapshot) {
           if (snapshot.hasData) {
             var name = snapshot.data.uid;
-            print('nombre');
-            print(name);
+            //print(name);
             return Text(
               name,
               style: TextStyle(color: Colors.white),

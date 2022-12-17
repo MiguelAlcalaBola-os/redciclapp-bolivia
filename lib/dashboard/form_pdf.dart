@@ -44,7 +44,7 @@ class _FormPDFsState extends State<FormPDFs> {
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (BuildContext context, snapshot) {
             if (snapshot.hasData) {
-              print(snapshot.hasData);
+              //print(snapshot.hasData);
               var email = snapshot.data.email;
               return formularioPdf(email);
             } else {

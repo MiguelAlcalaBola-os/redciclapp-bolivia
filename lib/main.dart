@@ -1,8 +1,8 @@
-
-
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:material_kit_flutter/dashboard/getstarted.dart';
 import './screens/home.dart';
 import './screens/login_page.dart';
 import 'package:flutter/material.dart';
@@ -37,11 +37,13 @@ import 'package:material_kit_flutter/screens/update_date.dart';
 import 'package:material_kit_flutter/screens/videos.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(MyApp());
 }
+
 final navigatorKey = GlobalKey<NavigatorState>();
 
 class MyApp extends StatelessWidget {
@@ -59,8 +61,8 @@ class MyApp extends StatelessWidget {
 class mainpage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-  return MaterialApp(
-      routes: <String, WidgetBuilder>{
+    return MaterialApp(
+        routes: <String, WidgetBuilder>{
           "/onboarding": (BuildContext context) => new Onboarding(),
           "/pro": (BuildContext context) => new Pro(),
           "/home": (BuildContext context) => new Home(),
@@ -91,26 +93,45 @@ class mainpage extends StatelessWidget {
           "/videoadmin": (BuildContext context) => new VideosAdmin(),
           "/useradmin": (BuildContext context) => new Users()
         },
-   // ScaffoldMessengerState: snackbar.messengerKey,
-          home: StreamBuilder<User>(
-        stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (context, snapshot) {
-          if(snapshot.connectionState==ConnectionState.waiting){
-           print(snapshot);
-            return Center(child:CircularProgressIndicator());
-          }
-          
-          else if(snapshot.hasError){
-            return Center(child: Text("algo salio mal"));
-          }
-          else if(snapshot.hasData) {
-            return Home();
-          
-          } else {
-            return LoginScreen();
-          }
-        },
-      ));
+        // ScaffoldMessengerState: snackbar.messengerKey,
+        home: StreamBuilder<User>(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              //print(snapshot);
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text("algo salio mal"));
+            } else if (snapshot.hasData) {
+              //print(esAdmin(snapshot.data.uid).toString());
+              //var rol = esAdmin(snapshot.data.uid);
+              //print('aqui ' + rol.toString());
+              // if (rol.toString() == 'true') {
+              return Home();
+              // } else {
+              //return Home();
+              // }
+            } else {
+              return LoginScreen();
+            }
+          },
+        ));
   }
 
+  Future<bool> esAdmin(String userUid) async {
+    var resp = 'Usuario';
+    try {
+      DataSnapshot snapshot =
+          await FirebaseDatabase.instance.ref().child("Usuarios").get();
+
+      var obj = snapshot.value.toString().contains(userUid);
+      // if (obj) {
+      //   resp = 'Admin';
+      // }
+      return Future.value(obj);
+    } catch (e) {
+      print(e);
+      return Future.value(false);
+    }
+  }
 }

@@ -5,13 +5,15 @@ import 'pdfs_admin.dart';
 import 'users_admin.dart';
 import 'videos_admin.dart';
 import "../screens/login_page.dart";
+
 class GetStarted extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(onPressed: ()=> Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => LoginScreen())),
-                       child: Icon(Icons.arrow_back)),
+      floatingActionButton: FloatingActionButton(
+          onPressed: () => Navigator.push(
+              context, MaterialPageRoute(builder: (context) => LoginScreen())),
+          child: Icon(Icons.arrow_back)),
       backgroundColor: softPurple,
       body: SafeArea(
         child: Column(
@@ -64,9 +66,7 @@ class GetStarted extends StatelessWidget {
                                 onTap: (() => Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => PDFs())
-                                        )
-                                        ),
+                                        builder: (context) => PDFs()))),
                                 child: Image.asset('assets/img/pdf.png',
                                     height: 50),
                               ),

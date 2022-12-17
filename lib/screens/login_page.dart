@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:material_kit_flutter/dashboard/getstarted.dart';
 import 'package:material_kit_flutter/model/Auth.dart';
 //import 'package:material_kit_flutter/screens/acercade.dart';
 import 'package:material_kit_flutter/screens/home.dart';
@@ -48,6 +50,36 @@ class _LoginScreenState extends State<LoginScreen> {
 
   // string for displaying the error Message
   String errorMessage;
+
+  // bool admin(String userUid) {
+  //   bool obje = esAdmin(userUid);
+
+  //   return obje;
+  // }
+
+  Future<String> esAdmin(String userUid) async {
+    var resp = 'Usuario';
+    try {
+      DataSnapshot snapshot = await FirebaseDatabase.instance
+          .ref()
+          .child("Usuarios")
+          //.orderByChild("uidUser")
+          // .equalTo(userUid)
+          // .orderByChild('uidUser')
+          // .equalTo(userUid)
+          .get();
+
+      //print(snapshot.value);
+      var obj = snapshot.value.toString().contains(userUid);
+      if (obj) {
+        resp = 'Admin';
+      }
+      return Future.value(resp);
+    } catch (e) {
+      print(e);
+      return Future.value(resp);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -151,12 +183,22 @@ class _LoginScreenState extends State<LoginScreen> {
         onPressed: () async {
           User user = await Authenticador.iniciarSesion(context: context);
           if (user != null) {
+            var rol = await esAdmin(user.uid);
+            //print(rol.compareTo('user.uid'));
+            print('Hola ' + rol.toString());
             Fluttertoast.showToast(
-                msg: "Sesión iniciada",
+                msg: "Sesión iniciada " + rol.toString(),
                 textColor: Color.fromARGB(255, 254, 249, 249),
                 backgroundColor: Color.fromARGB(255, 83, 80, 80));
-            Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => Home()));
+            if (rol.toString() == 'Admin') {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => GetStarted()));
+            } else {
+              //   Navigator.of(context).pushReplacement(
+              //       MaterialPageRoute(builder: (context) => Home()));
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Home()));
+            }
           }
         },
         child: Padding(
@@ -448,8 +490,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       msg: "Sesión iniciada",
                       textColor: Color.fromARGB(255, 254, 249, 249),
                       backgroundColor: Color.fromARGB(255, 83, 80, 80)),
-                  Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (context) => Home())),
+                  // Navigator.of(context).pushReplacement(
+                  //     MaterialPageRoute(builder: (context) => Home())),
                 });
       } on FirebaseAuthException catch (error) {
         switch (error.code) {

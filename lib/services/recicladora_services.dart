@@ -6,14 +6,20 @@ class RecicladoraServices {
   final firebaseRealTime = FirebaseDatabase.instance.ref();
 
   Future<List<Recicladora>> getRecicladora() async {
-    var snapshot =
-        await FirebaseFirestore.instance.collection('recicladoras').get();
+    var snapshot = await firebaseRealTime
+        .child('recicladoras')
+        .get(); //FirebaseFirestore.instance.collection('recicladoras').get();
 
     List<Recicladora> recicladoras = [];
-
-    snapshot.docs.forEach((doc) {
-      recicladoras.add(Recicladora.fromSnapshot(doc));
-    });
+    print(snapshot.value);
+    //Map recicla = snapshot.value as Map;
+    // recicla.forEach((key, value) {
+    //   recicladoras.add(Recicladora());
+    // });
+    // snapshot.docs.forEach((doc) {
+    //   recicladoras.add(Recicladora.fromSnapshot(doc));
+    // });
+    //print(recicladoras);
     return recicladoras;
   }
 
